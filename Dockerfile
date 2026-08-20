@@ -29,11 +29,7 @@ USER spring:spring
 # Copy built JAR artifact from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose server port
-EXPOSE 8080
-
 # Environment variables
-ENV PORT=8080
 ENV JAVA_TOOL_OPTIONS="-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # Run the application
