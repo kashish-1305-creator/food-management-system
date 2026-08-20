@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: food-management-system
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGODB_URI
+        value: mongodb+srv://isha2005:2005_isha@cluster0.vegaggl.mongodb.net/FoodDB
