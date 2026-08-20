@@ -8,6 +8,8 @@ services:
     envVars:
       - key: PORT
         value: 8080
+      - key: JAVA_TOOL_OPTIONS
+        value: -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       - key: SUPABASE_DB_URL
         value: jdbc:postgresql://db.ftpjzvqscwqxwwoqcfvs.supabase.co:6543/postgres?sslmode=require
       - key: SUPABASE_DB_USER

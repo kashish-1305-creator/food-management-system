@@ -34,6 +34,7 @@ EXPOSE 8080
 
 # Environment variables
 ENV PORT=8080
+ENV JAVA_TOOL_OPTIONS="-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # Run the application
-ENTRYPOINT ["java", "-Djava.net.preferIPv4Stack=true", "-Djava.net.preferIPv4Addresses=true", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
