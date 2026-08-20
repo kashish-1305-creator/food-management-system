@@ -1,11 +1,15 @@
 package com.example.demo.model;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "User")
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class User {
- @Id
-private String userId;
+
+    @Id
+    private String userId;
 private String userName;
 private String email;
 private String mobile;

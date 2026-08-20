@@ -1,11 +1,15 @@
 package com.example.demo.model;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Food")
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "foods")
 public class Food {
- @Id
-private String foodId;
+
+    @Id
+    private String foodId;
 private String foodName;
 private String quantity;
 private String expiry;

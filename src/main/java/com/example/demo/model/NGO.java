@@ -1,9 +1,11 @@
 package com.example.demo.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Document(collection = "NGO")
+@Entity
+@Table(name = "ngos")
 public class NGO {
 
     @Id
@@ -29,6 +31,14 @@ public class NGO {
     }
 
     // Getters and Setters
+    public String getNgoId() {
+        return ngoId;
+    }
+
+    public void setNgoId(String ngoId) {
+        this.ngoId = ngoId;
+    }
+
     public String getNGOId() {
         return ngoId;
     }

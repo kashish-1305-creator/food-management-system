@@ -4,11 +4,12 @@ import com.example.demo.model.Admin;
 import com.example.demo.model.NGO;
 import com.example.demo.model.User;
 import com.example.demo.model.Transaction;
+import com.example.demo.repository.AdminRepository;
+import com.example.demo.repository.NGORepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.TransactionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,297 +18,126 @@ import java.util.List;
 public class AdminDBHelper {
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private AdminRepository adminRepository;
 
+    @Autowired
+    private NGORepository ngoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     // =====================================================
     //                    ADMIN LOGIN
     // =====================================================
 
-    // Login using Email and Password
-    //
-    // POST /admin/login
-    //
     public Admin login(String email, String password) {
-
-        Query query = new Query();
-
-        query.addCriteria(
-                Criteria.where("email").is(email)
-                        .and("password").is(password)
-        );
-
-        return mongoTemplate.findOne(
-                query,
-                Admin.class
-        );
+        return adminRepository.findByEmailAndPassword(email, password).orElse(null);
     }
-
 
     // =====================================================
     //                    ADMIN BY ID
     // =====================================================
 
-    // Get Admin By ID
     public Admin getById(String id) {
-
-        return mongoTemplate.findById(
-                id,
-                Admin.class
-        );
+        return adminRepository.findById(id).orElse(null);
     }
-
 
     // =====================================================
     //                    NGO MANAGEMENT
     // =====================================================
 
-    // Get All NGOs
-    //
-    // GET /admin/ngos
-    //
     public List<NGO> getAllNGOs() {
-
-        return mongoTemplate.findAll(NGO.class);
+        return ngoRepository.findAll();
     }
 
-
-    // Get Pending NGOs
-    //
-    // GET /admin/ngos/pending
-    //
     public List<NGO> getPendingNGOs() {
-
-        Query query = new Query();
-
-        query.addCriteria(
-                Criteria.where("status")
-                        .is("Pending")
-        );
-
-        return mongoTemplate.find(
-                query,
-                NGO.class
-        );
+        return ngoRepository.findByStatusIgnoreCase("Pending");
     }
 
-
-    // Approve NGO
-    //
-    // Pending -> Approved
-    //
     public NGO approveNGO(String ngoId) {
-
-        NGO ngo =
-                mongoTemplate.findById(
-                        ngoId,
-                        NGO.class
-                );
-
+        NGO ngo = ngoRepository.findById(ngoId).orElse(null);
         if (ngo != null) {
-
             ngo.setStatus("Approved");
-
-            return mongoTemplate.save(ngo);
+            return ngoRepository.save(ngo);
         }
-
         return null;
     }
 
-
-    // Reject NGO
-    //
-    // Pending -> Rejected
-    //
     public NGO rejectNGO(String ngoId) {
-
-        NGO ngo =
-                mongoTemplate.findById(
-                        ngoId,
-                        NGO.class
-                );
-
+        NGO ngo = ngoRepository.findById(ngoId).orElse(null);
         if (ngo != null) {
-
             ngo.setStatus("Rejected");
-
-            return mongoTemplate.save(ngo);
+            return ngoRepository.save(ngo);
         }
-
         return null;
     }
 
-
-    // Block NGO
-    //
-    // Approved -> Blocked
-    //
     public NGO blockNGO(String ngoId) {
-
-        NGO ngo =
-                mongoTemplate.findById(
-                        ngoId,
-                        NGO.class
-                );
-
+        NGO ngo = ngoRepository.findById(ngoId).orElse(null);
         if (ngo != null) {
-
             ngo.setStatus("Blocked");
-
-            return mongoTemplate.save(ngo);
+            return ngoRepository.save(ngo);
         }
-
         return null;
     }
 
-
-    // Unblock NGO
-    //
-    // Blocked -> Approved
-    //
     public NGO unblockNGO(String ngoId) {
-
-        NGO ngo =
-                mongoTemplate.findById(
-                        ngoId,
-                        NGO.class
-                );
-
+        NGO ngo = ngoRepository.findById(ngoId).orElse(null);
         if (ngo != null) {
-
             ngo.setStatus("Approved");
-
-            return mongoTemplate.save(ngo);
+            return ngoRepository.save(ngo);
         }
-
         return null;
     }
-
 
     // =====================================================
     //                    USER MANAGEMENT
     // =====================================================
 
-    // Get All Users
-    //
-    // GET /admin/users
-    //
     public List<User> getAllUsers() {
-
-        return mongoTemplate.findAll(User.class);
+        return userRepository.findAll();
     }
 
-
-    // Get User By ID
     public User getUserById(String userId) {
-
-        return mongoTemplate.findById(
-                userId,
-                User.class
-        );
+        return userRepository.findById(userId).orElse(null);
     }
-
 
     // =====================================================
     //                 TRANSACTION MANAGEMENT
     // =====================================================
 
-    // Get All Transactions
-    //
-    // GET /admin/transactions
-    //
     public List<Transaction> getAllTransactions() {
-
-        return mongoTemplate.findAll(
-                Transaction.class
-        );
+        return transactionRepository.findAll();
     }
 
-
-    // Get Transactions By Status
-    //
-    // GET /admin/transactions/status/Pending
-    //
-    public List<Transaction> getTransactionsByStatus(
-            String status) {
-
-        Query query = new Query();
-
-        query.addCriteria(
-                Criteria.where("status")
-                        .is(status)
-        );
-
-        return mongoTemplate.find(
-                query,
-                Transaction.class
-        );
+    public List<Transaction> getTransactionsByStatus(String status) {
+        return transactionRepository.findByStatus(status);
     }
-
 
     // =====================================================
     //                    ADMIN DASHBOARD
     // =====================================================
 
-    // Get basic Admin Dashboard data
-    //
-    // GET /admin/dashboard
-    //
     public long getTotalUsers() {
-
-        return mongoTemplate.count(
-                new Query(),
-                User.class
-        );
+        return userRepository.count();
     }
-
 
     public long getTotalNGOs() {
-
-        return mongoTemplate.count(
-                new Query(),
-                NGO.class
-        );
+        return ngoRepository.count();
     }
-
 
     public long getPendingNGOsCount() {
-
-        Query query = new Query();
-
-        query.addCriteria(
-                Criteria.where("status")
-                        .is("Pending")
-        );
-
-        return mongoTemplate.count(
-                query,
-                NGO.class
-        );
+        return ngoRepository.findByStatusIgnoreCase("Pending").size();
     }
-
 
     public long getApprovedNGOsCount() {
-
-        Query query = new Query();
-
-        query.addCriteria(
-                Criteria.where("status")
-                        .is("Approved")
-        );
-
-        return mongoTemplate.count(
-                query,
-                NGO.class
-        );
+        return ngoRepository.findByStatusIgnoreCase("Approved").size();
     }
 
-
     public long getTotalTransactions() {
-
-        return mongoTemplate.count(
-                new Query(),
-                Transaction.class
-        );
+        return transactionRepository.count();
     }
 }
