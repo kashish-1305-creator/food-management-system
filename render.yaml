@@ -4,9 +4,13 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     plan: free
-    healthCheckPath: /
+    healthCheckPath: /users
     envVars:
       - key: PORT
         value: 8080
-      - key: MONGODB_URI
-        value: mongodb+srv://isha2005:2005_isha@cluster0.vegaggl.mongodb.net/FoodDB
+      - key: SUPABASE_DB_URL
+        value: jdbc:postgresql://db.ftpjzvqscwqxwwoqcfvs.supabase.co:6543/postgres?sslmode=require
+      - key: SUPABASE_DB_USER
+        value: postgres
+      - key: SUPABASE_DB_PASSWORD
+        value: Kashish@1305
